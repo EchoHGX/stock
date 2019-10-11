@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="#B4E6FB"> 
+		<title>行情</title>  
+	</head>
+	<style type="text/css">   
+		body{background:#1f212d} 
+		*{
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+		.Kline-div{
+			position: relative;
+			width: 100%;
+			height: 268px;
+		}
+		.Kline-div .m-line{height: 49%;width: 100%;margin-bottom: 1%;} 
+		.Kline-div .K-line{height: 50%;width: 100%;} 
+		.Kline-div .k-cont{position: absolute;top: 0;width: 100%;height: 268px;z-index: 4;}
+		.Kline-div .k-cont.active{z-index: 6;}
+		.tabs{
+			width: 100%;
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
+			background: #1f212d;
+			border-bottom: 1px solid #383b48;
+		}
+		.tabs .tab_item{
+			display: block;
+			padding: 0 20px;
+			font-size: 12px;
+			color: #a7b7cc;
+			line-height: 30px;
+			text-decoration: none;
+		}
+		.tabs .tab_item.active{
+			color: #0e99e1;
+			border-bottom: 1px solid #0e99e1;
+		}
+		.detail_wrap{
+			width: 100%;
+			position: relative;
+			padding-top: 15px;
+			padding-left: 10px;
+			padding-right: 10px;
+			padding-bottom: 15px;
+			/*background: #1f2330;*/
+		}
+		.detail_wrap:after{
+			content: '';
+			display: block;
+			width: 8px;
+			height: 8px;
+			position: absolute;
+			left: 49%;
+			transform: rotate(-45deg);
+			bottom: 5px;
+			border-bottom: 1px solid #bbb;
+			border-left: 1px solid #bbb;
+		}
+		.detail_wrap.active:after{
+			transform: rotate(135deg);
+			bottom: 0;
+		}
+		.status span{
+			padding-right: 10px;
+		}
+		.isUp{
+			color: #f00 !important;
+		}
+		.isDown{
+			color: #0e99e1 !important;
+		}
+		.isUp span{
+			padding-right: 10px;
+			font-size: 12px;
+		}
+		.isDown span{
+			padding-right: 10px;
+			font-size: 12px;
+		}
+		.clearfix{
+			zoom: 1;
+		}
+		.clearfix:after{
+			content: '';
+			display: block;
+			width: 100%;
+			height: 0;
+			visibility: hidden;
+			clear: both;
+		}
+		.detail_wrap.active .info_wrap{
+			height: 32px !important;
+		}
+		.info_wrap{
+			width: 100%;
+			overflow: hidden;
+			transition: all .3s;
+			margin-top: 5px;
+		}
+		.info{
+			font-size: 10px;
+			color: #fff;
+		}
+		.info p{
+			float: left;
+			width: 33.3%;
+			line-height: 16px;
+		}
+		.info p span:nth-of-type(1){
+			color: #bbb;
+		}
+		.info p span:nth-of-type(2){
+			float: right;
+			text-align: right;
+			max-width: 70px;
+			height: 16px;
+			overflow: hidden;
+			word-break: keep-all;
+		}
+		.info p:nth-of-type(3n+1){
+			padding-right: 10px;
+		}
+		.info p:nth-of-type(3n-1){
+			padding-right: 10px;
+		}
+		.order_list{
+			width: 100%;
+			padding-left: 15px;
+			padding-right: 15px;
+			padding-top: 10px;
+			display: flex;
+			display: -webkit-flex;
+			flex-direction: row;
+			-webkit-flex-direction: row;
+		}
+		.order_list .list_wrap{
+			width: 50%;
+		}
+		.order_list .list_wrap .order_item{
+			width: 100%;
+			display: flex;
+			display: -webkit-flex;
+			flex-direction: row;
+			-webkit-flex-direction: row;
+			height: 24px;
+			line-height: 24px;
+			color: #fff;
+		}
+		.order_list .list_wrap .order_item.label{
+			color: #8a8a8a;
+		}
+		.order_list .order_item.label .num{
+			color: #8a8a8a;
+		}
+		.order_list .order_item.label .price{
+			color: #8a8a8a;
+		}
+		.order_list .order_item .lab{
+			width: 25%;
+			font-size: 10px;
+		}
+		.order_list .order_item .num{
+			width: 30%;
+			font-size: 12px;
+			color: #fff;
+		}
+		.order_list .order_item .price{
+			width: 45%;
+			font-size: 12px;
+			color: #fff;
+		}
+	</style>   
+<body> 
+	<div class="detail_wrap">
+		<p style="font-size: 25px;color: #f00;">0.00</p>
+		<p class="status isUp"><span>0.00</span><span>0.00</span></p>
+		<div class="info_wrap">
+			<div class="info clearfix">
+				<p><span>今开</span><span class="isUp">--</span></p>
+				<p><span>最高</span><span class="isUp">--</span></p>
+				<p><span>成交量</span><span>--</span></p>
+				<p><span>昨收</span><span>--</span></p>
+				<p><span>最低</span><span>--</span></p>
+				<p><span>成交额</span><span>--</span></p>
+				<p><span>量比</span><span>--</span></p>
+				<p><span>今开</span><span>--</span></p>
+			</div>
+		</div>
+	</div>
+	<div class="tabs">
+		<a href="javascript:void(0);" class="tab_item active show" data-type='min'>分时</a>
+		<a href="javascript:void(0);" class="tab_item" data-type='kday'>日K</a>
+		<a href="javascript:void(0);" class="tab_item" data-type='kweek'>周K</a>
+		<a href="javascript:void(0);" class="tab_item" data-type='kmonth'>月K</a>
+	</div>
+	<div id="Kline-div" class="Kline-div">  
+		<div id="kday" class="k-cont"></div> 
+		<div id="kweek" class="k-cont"></div> 
+		<div id="kmonth" class="k-cont"></div>
+		<div id="min" class="k-cont active" style="display: block;position: relative;z-index: 5;"></div>
+	</div> 
+	<div class="order_list">
+		<div class="list_wrap">
+			<div class="order_item">
+				<p class="lab">买入</p>
+				<p class="num">数量</p>
+				<p class="price">金额</p>
+			</div>
+		</div>
+		<div class="list_wrap">
+			<div class="order_item">
+				<p class="lab">卖出</p>
+				<p class="num">数量</p>
+				<p class="price">金额</p>
+			</div>
+		</div>
+	</div>
+	<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script> 
+	<script src="https://cdn.bootcss.com/echarts/4.3.0-rc.2/echarts.min.js"></script>   
+	<script src="js/k-line.js" type="text/javascript" charset="utf-8"></script>
+	<script>   
+		window.alert = function(){};
+		$(function(){
+			//获取数据接口 code:股票code  type： 类型（hk:港股,hs：沪深,us：美股)
+			function getUrl(code,type,showtype){
+				if(type === 'hs'){
+					switch(showtype){
+						case 'min':
+							return 'http://web.ifzq.gtimg.cn/appstock/app/Minute/query?_var=min_data&code='+code+'&r='+Math.random();
+						case 'fdays':
+							return 'http://web.ifzq.gtimg.cn/appstock/app/day/query?_var=fday_data&code='+code+'&r='+ Math.random();
+						case 'kday':
+							return 'http://data.gtimg.cn/flashdata/hushen/latest/daily/'+code+'.js?maxage=43201&visitDstTime=1';
+						case 'kweek':
+							return 'http://data.gtimg.cn/flashdata/hushen/latest/weekly/'+code+'.js?maxage=43201&visitDstTime=1';
+						case 'kmonth':
+							return 'http://data.gtimg.cn/flashdata/hushen/monthly/'+code+'.js?maxage=43201';
+						default:
+						 return 'http://data.gtimg.cn/flashdata/hushen/latest/daily/sz000002.js?maxage=43201&visitDstTime=1'
+					}
+				}else if(type === 'hk'){
+					switch(showtype){
+						case 'min':
+							return 'http://web.ifzq.gtimg.cn/appstock/app/hkMinute/query?_var=min_data&code=hk'+code+'&r='+Math.random();
+						case 'fdays':
+							return 'http://web.ifzq.gtimg.cn/appstock/app/day/query?_var=fday_data&code=hk'+code+'&r='+Math.random();
+						case 'kday':
+							return 'http://data.gtimg.cn/flashdata/hk/latest/daily/hk'+code+'.js?maxage=43201&visitDstTime=1';
+						case 'kweek':
+							return 'http://data.gtimg.cn/flashdata/hk/latest/weekly/hk'+code+'.js?maxage=43201&visitDstTime=1';
+						case 'kmonth':
+							return 'http://data.gtimg.cn/flashdata/hk/monthly/hk'+code+'.js?maxage=43201';
+						default:
+						 return 'http://data.gtimg.cn/flashdata/hushen/latest/daily/sz000002.js?maxage=43201&visitDstTime=1'
+					}
+				}else if(type === 'us'){
+					switch(showtype){
+						case 'min':
+							return 'http://web.ifzq.gtimg.cn/appstock/app/UsMinute/query?_var=min_data&code=us'+code+'&r='+Math.random();
+						case 'fdays':
+							return 'http://web.ifzq.gtimg.cn/appstock/app/dayus/query?_var=fday_data&code=us'+code+'&r='+Math.random();
+						case 'kday':
+							return 'http://data.gtimg.cn/flashdata/us/latest/daily/us'+code+'.js?maxage=43201&visitDstTime=1';
+						case 'kweek':
+							return 'http://data.gtimg.cn/flashdata/us/latest/weekly/us'+code+'.js?maxage=43201&visitDstTime=1';
+						case 'kmonth':
+							return 'http://data.gtimg.cn/flashdata/us/monthly/us'+code+'.js?maxage=43201';
+						default:
+						 return 'http://data.gtimg.cn/flashdata/hushen/latest/daily/sz000002.js?maxage=43201&visitDstTime=1'
+					}
+				}
+			}
+			
+			var showAgain = true;
+			/**--------------------------分时数据----------------------------**/
+			function getmData(code,type,showtype,callback) { //分时图
+				$.ajax({
+			    url: getUrl(code,type,showtype),
+			    dataType:"script",
+			    cache:"false",
+			    type:"GET",
+			    success: function () {
+			      // console.log(min_data)
+			      var resData,arr = [],_arr = [],zhishu;
+			      if(type === 'us'){
+			        resData = min_data.data[type+code];
+			        arr = resData.data.data;
+			        detailData = resData.qt[type+code];
+			        zhishu = resData.qt.zhishu && resData.qt.zhishu[code] || [];
+			      }else if(type === 'hk'){
+			        resData = min_data.data[type+code];
+			        arr = resData.data.data;
+			        detailData = resData.qt[type+code];
+			        zhishu = resData.qt.zhishu && resData.qt.zhishu[code] || [];
+			      }else{
+			        resData = min_data.data[code];
+			        arr = resData.data.data;
+			        detailData = resData.qt[code];
+			        zhishu = resData.qt.zhishu || [];
+			      }
+			      // console.log('detailData',detailData)
+			      if(showAgain){
+			      	console.log('画');
+			      	for(var i=0;i<arr.length;i++){ 
+				        var _a = arr[i].split(" ") , _b = arr[i].split(" "), _c =[];
+				        if(i>0){
+				          _c = arr[i-1].split(" ");
+				        }
+				        // 腾讯股票接口传的数值0930（日期） 5.55（成交价） 37673（累计成交量，初始成交量为9:30的）
+				        // 因此每分钟的 成交量 = 当前累计成交量 - 前一分钟的累计成交量
+				        _b[2] = _c.length>0 ? _a[2] - _c[2] : _a[2];    
+				        _arr.push(_b)
+				      }
+				      var mdata= {"data":[]}
+				      mdata.data = _arr;
+				      mdata.yestclose = detailData[4];
+			      	callback(mdata);
+			      	showAgain = false;
+			      }
+			      
+			      showDetail(detailData,zhishu,type);
+			    },
+			    error: function () {
+			      alert("wrong"); 
+			    }
+			  });
+			}
+
+			function getInfo(code,type,callback){ //获取股票信息
+				var infoUrl;
+				if(type === 'hs'){
+					infoUrl = "http://hq.sinajs.cn/list="+code
+				}else{
+					infoUrl = "http://hq.sinajs.cn/list="+type+code
+				}
+			  $.ajax({
+			    url: infoUrl,
+			    dataType: "script",
+			    cache: "false",
+			    type: "GET",
+			    success: function(res){
+			    	// 结果用 hq_str_sz000001 接收。需要对应请求的股票代码
+			    	var info;
+			    	if(type === 'hs'){
+			      	info = eval('hq_str_'+code);
+				    }else{
+				      info = eval('hq_str_'+type+code);
+				    }
+			      var _info_arr = info.split(",")
+			      callback(_info_arr)
+			    },
+			    error: function(){
+			      alert("查询信息失败")
+			    }
+			  })
+			}
+
+
+			function showDetail(detailData,zhishu,type){
+				// console.log('zhishu',zhishu);
+				if(detailData[32].search('-') > -1){ isUp = false}
+				var html,orderHtml='';
+				if(isUp){
+					if(type === 'hs'){
+						if(zhishu.length > 0){
+							html = '<p style="font-size: 25px;" class="isUp">'+detailData[3]+'</p>'+
+								'<p class="status isUp"><span>+'+detailData[31]+'</span><span>+'+detailData[32]+'%</span><span style="color:#bbb">'+formDate(detailData[30])+'</span></p>'+
+								'<div class="info_wrap"><div class="info clearfix">'+
+									'<p><span>今开</span><span class="isUp">'+detailData[5]+'</span></p>'+
+									'<p><span>最高</span><span class="isUp">'+detailData[33]+'</span></p>'+
+									'<p><span>成交额</span><span>'+fixData2(detailData[57])+'</span></p>'+
+									'<p><span>昨收</span><span>'+detailData[4]+'</span></p>'+
+									'<p><span>最低</span><span>'+detailData[34]+'</span></p>'+
+									'<p><span>成交量</span><span>'+fixData(detailData[6])+'手</span></p>'+
+									'<p><span>涨家</span><span>'+zhishu[2]+'</span></p>'+
+									'<p><span>平家</span><span>'+zhishu[3]+'</span></p>'+
+									'<p><span>跌家</span><span>'+zhishu[4]+'</span></p>'+
+									'<p><span>振幅</span><span>'+detailData[43]+'%</span></p>'+
+								'</div></div>';
+							orderHtml = '<div class="list_wrap">'+
+								'<div class="order_item label">'+
+									'<p class="lab">买入</p>'+
+									'<p class="num">金额</p>'+
+									'<p class="price">数量</p>'+
+								'</div>'+
+								'<div class="order_item">'+
+									'<p class="lab">买1</p>'+
+									'<p class="num">'+detailData[9]+'</p>'+
+									'<p class="price">'+detailData[10]+'</p>'+
+								'</div>'+
+								'<div class="order_item">'+
+									'<p class="lab">买2</p>'+
+									'<p class="num">'+detailData[11]+'</p>'+
+									'<p class="price">'+detailData[12]+'</p>'+
+								'</div>'+
+								'<div class="order_item">'+
+									'<p class="lab">买3</p>'+
+									'<p class="num">'+detailData[13]+'</p>'+
+									'<p class="price">'+detailData[14]+'</p>'+
+								'</div>'+
+								'<div class="order_item">'+
+									'<p class="lab">买4</p>'+
+									'<p class="num">'+detailData[15]+'</p>'+
+									'<p class="price">'+detailData[16]+'</p>'+
+								'</div>'+
+								'<div class="order_item">'+
+									'<p class="lab">买5</p>'+
+									'<p class="num">'+detailData[17]+'</p>'+
+									'<p class="price">'+detailData[18]+'</p>'+
+								'</div>'+
+							'</div>'+
+							'<div class="list_wrap">'+
+								'<div class="order_item label">'+
+									'<p class="lab">卖出</p>'+
+									'<p class="num">金额</p>'+
+									'<p class="price">数量</p>'+
+								'</div>'+
+								'<div class="order_item">'+
+									'<p class="lab">卖1</p>'+
+									'<p class="num">'+detailData[19]+'</p>'+
+									'<p class="price">'+detailData[20]+'</p>'+
+								'</div>'+
+								'<div class="order_item">'+
+									'<p class="lab">卖2</p>'+
+									'<p class="num">'+detailData[21]+'</p>'+
+									'<p class="price">'+detailData[22]+'</p>'+
+								'</div>'+
+								'<div class="order_item">'+
+									'<p class="lab">卖3</p>'+
+									'<p class="num">'+detailData[23]+'</p>'+
+									'<p class="price">'+detailData[24]+'</p>'+
+								'</div>'+
+								'<div class="order_item">'+
+									'<p class="lab">卖4</p>'+
+									'<p class="num">'+detailData[25]+'</p>'+
+									'<p class="price">'+detailData[26]+'</p>'+
+								'</div>'+
+								'<div class="order_item">'+
+									'<p class="lab">卖5</p>'+
+									'<p class="num">'+detailData[27]+'</p>'+
+									'<p class="price">'+detailData[28]+'</p>'+
+								'</div>'+
+							'</div>'
+						}else{
+							html = '<p style="font-size: 25px;" class="isUp">'+detailData[3]+'</p>'+
+							'<p class="status isUp"><span>+'+detailData[31]+'</span><span>+'+detailData[32]+'%</span><span style="color:#bbb">'+formDate(detailData[30])+'</span></p>'+
+							'<div class="info_wrap"><div class="info clearfix">'+
+								'<p><span>今开</span><span class="isUp">'+detailData[5]+'</span></p>'+
+								'<p><span>最高</span><span class="isUp">'+detailData[33]+'</span></p>'+
+								'<p><span>成交量</span><span>'+fixData(detailData[6])+'手</span></p>'+
+								'<p><span>昨收</span><span>'+detailData[4]+'</span></p>'+
+								'<p><span>最低</span><span>'+detailData[34]+'</span></p>'+
+								'<p><span>成交额</span><span>'+fixData2(detailData[57])+'</span></p>'+
+								'<p><span>换手率</span><span>'+detailData[38]+'%</span></p>'+
+								'<p><span>市盈ttm</span><span>'+detailData[39]+'</span></p>'+
+								'<p><span>总市值</span><span>'+detailData[45]+'亿</span></p>'+
+								'<p><span>量比</span><span>'+detailData[49]+'</span></p>'+
+								'<p><span>市盈动</span><span>'+detailData[52]+'</span></p>'+
+								'<p><span>流通值</span><span>'+detailData[44]+'</span></p>'+
+								'<p><span>委比</span><span>'+detailData[49]+'</span></p>'+
+								'<p><span>市盈静</span><span>'+detailData[53]+'</span></p>'+
+								'<p><span>市净率</span><span>'+detailData[46]+'</span></p>'+
+								'<p><span>涨停价</span><span>'+detailData[47]+'</span></p>'+
+								'<p><span>均价</span><span>'+detailData[51]+'</span></p>'+
+								'<p><span>内盘</span><span>'+fixData(detailData[7])+'手</span></p>'+
+								'<p><span>跌停价</span><span>'+detailData[48]+'</span></p>'+
+								'<p><span>振幅</span><span>'+detailData[43]+'%</span></p>'+
+								'<p><span>外盘</span><span>'+fixData(detailData[8])+'手</span></p>'+
+							'</div></div>';
+							orderHtml = '<div class="list_wrap">'+
+								'<div class="order_item label">'+
+									'<p class="lab">买入</p>'+
+									'<p class="num">金额</p>'+
+									'<p class="price">数量</p>'+
+								'</div>'+
+								'<div class="order_item">'+
+									'<p class="lab">买1</p>'+
+									'<p class="num">'+detailData[9]+'</p>'+
+									'<p class="price">'+detailData[10]+'</p>'+
+								'</div>'+
+								'<div class="order_item">'+
+									'<p class="lab">买2</p>'+
+									'<p class="num">'+detailData[11]+'</p>'+
+									'<p class="price">'+detailData[12]+'</p>'+
+								'</div>'+
+								'<div class="order_item">'+
+									'<p class="lab">买3</p>'+
+									'<p class="num">'+detailData[13]+'</p>'+
+									'<p class="price">'+detailData[14]+'</p>'+
+								'</div>'+
+								'<div class="order_item">'+
+									'<p class="lab">买4</p>'+
+									'<p class="num">'+detailData[15]+'</p>'+
+									'<p class="price">'+detailData[16]+'</p>'+
+								'</div>'+
+								'<div class="order_item">'+
+									'<p class="lab">买5</p>'+
+									'<p class="num">'+detailData[17]+'</p>'+
+									'<p class="price">'+detailData[18]+'</p>'+
+								'</div>'+
+							'</div>'+
+							'<div class="list_wrap">'+
+								'<div class="order_item label">'+
+									'<p class="lab">卖出</p>'+
+									'<p class="num">金额</p>'+
+									'<p class="price">数量</p>'+
+								'</div>'+
+								'<div class="order_item">'+
+									'<p class="lab">卖1</p>'+
+									'<p class="num">'+detailData[19]+'</p>'+
+									'<p class="price">'+detailData[20]+'</p>'+
+								'</div>'+
+								'<div class="order_item">'+
+									'<p class="lab">卖2</p>'+
+									'<p class="num">'+detailData[21]+'</p>'+
+									'<p class="price">'+detailData[22]+'</p>'+
+								'</div>'+
+								'<div class="order_item">'+
+									'<p class="lab">卖3</p>'+
+									'<p class="num">'+detailData[23]+'</p>'+
+									'<p class="price">'+detailData[24]+'</p>'+
+								'</div>'+
+								'<div class="order_item">'+
+									'<p class="lab">卖4</p>'+
+									'<p class="num">'+detailData[25]+'</p>'+
+									'<p class="price">'+detailData[26]+'</p>'+
+								'</div>'+
+								'<div class="order_item">'+
+									'<p class="lab">卖5</p>'+
+									'<p class="num">'+detailData[27]+'</p>'+
+									'<p class="price">'+detailData[28]+'</p>'+
+								'</div>'+
+							'</div>'
+						}
+					}else if(type === 'hk'){
+						if(zhishu.length > 0){
+							html = '<p style="font-size: 25px;" class="isUp">'+detailData[3]+'</p>'+
+								'<p class="status isUp"><span>+'+detailData[31]+'</span><span>+'+detailData[32]+'%</span><span style="color:#bbb">'+detailData[30]+'</span></p>'+
+								'<div class="info_wrap"><div class="info clearfix">'+
+									'<p><span>今开</span><span class="isUp">'+detailData[5]+'</span></p>'+
+									'<p><span>最高</span><span class="isUp">'+detailData[33]+'</span></p>'+
+									'<p><span>成交额</span><span>'+fixData2(detailData[37])+'</span></p>'+
+									'<p><span>昨收</span><span>'+detailData[4]+'</span></p>'+
+									'<p><span>最低</span><span>'+detailData[34]+'</span></p>'+
+									'<p><span>振幅</span><span>'+detailData[43]+'%</span></p>'+
+									'<p><span>涨家</span><span>'+zhishu[0]+'</span></p>'+
+									'<p><span>平家</span><span>'+zhishu[1]+'</span></p>'+
+									'<p><span>跌家</span><span>'+zhishu[2]+'</span></p>'+
+									'<p><span>52周高</span><span>'+detailData[48]+'</span></p>'+
+									'<p><span>52周低</span><span>'+detailData[49]+'</span></p>'+
+								'</div></div>'
+						}else{
+							html = '<p style="font-size: 25px;" class="isUp">'+detailData[3]+'</p>'+
+							'<p class="status isUp"><span>+'+detailData[31]+'</span><span>+'+detailData[32]+'%</span><span style="color:#bbb">'+detailData[30]+'</span></p>'+
+							'<div class="info_wrap"><div class="info clearfix">'+
+								'<p><span>今开</span><span class="isUp">'+detailData[5]+'</span></p>'+
+								'<p><span>最高</span><span class="isUp">'+detailData[33]+'</span></p>'+
+								'<p><span>成交量</span><span>'+fixData(detailData[6].split('.')[0])+'股</span></p>'+
+								'<p><span>昨收</span><span>'+detailData[4]+'</span></p>'+
+								'<p><span>最低</span><span>'+detailData[34]+'</span></p>'+
+								'<p><span>成交额</span><span>'+fixData2(detailData[37])+'</span></p>'+
+								'<p><span>换手率</span><span>'+detailData[59]+'%</span></p>'+
+								'<p><span>市盈ttm</span><span>'+detailData[39]+'</span></p>'+
+								'<p><span>总市值</span><span>'+detailData[45]+'亿</span></p>'+
+								'<p><span>量比</span><span>'+detailData[50]+'</span></p>'+
+								'<p><span>市盈静</span><span>'+detailData[57]+'</span></p>'+
+								'<p><span>流通值</span><span>'+detailData[44]+'</span></p>'+
+								'<p><span>市净率</span><span>'+detailData[58]+'</span></p>'+
+								'<p><span>振幅</span><span>'+detailData[43]+'%</span></p>'+
+								'<p><span>周息率</span><span>'+detailData[47]+'%</span></p>'+
+								'<p><span>52周高</span><span>'+detailData[48]+'</span></p>'+
+								'<p><span>52周低</span><span>'+detailData[49]+'</span></p>'+
+							'</div></div>'
+						}
+					}else if(type === 'us'){
+						html = '<p style="font-size: 25px;" class="isUp">'+detailData[3]+'</p>'+
+						'<p class="status isUp"><span>+'+detailData[31]+'</span><span>+'+detailData[32]+'%</span><span style="color:#bbb">'+detailData[30]+' 美东时间</span></p>'+
+						'<div class="info_wrap"><div class="info clearfix">'+
+							'<p><span>今开</span><span class="isUp">'+detailData[5]+'</span></p>'+
+							'<p><span>最高</span><span class="isUp">'+detailData[33]+'</span></p>'+
+							'<p><span>成交量</span><span>'+fixData(detailData[6])+'股</span></p>'+
+							'<p><span>昨收</span><span>'+detailData[4]+'</span></p>'+
+							'<p><span>最低</span><span>'+detailData[34]+'</span></p>'+
+							'<p><span>总市值</span><span>'+detailData[45]+'亿</span></p>'+
+							'<p><span>市净率</span><span>'+detailData[51]+'亿</span></p>'+
+							'<p><span>市盈ttm</span><span>'+detailData[39]+'</span></p>'+
+							'<p><span>每股收益</span><span>'+detailData[47]+'</span></p>'+
+							'<p><span>52周高</span><span>'+detailData[48]+'</span></p>'+
+							'<p><span>振幅</span><span>'+detailData[43]+'%</span></p>'+
+							'<p><span>周息率</span><span>'+detailData[52]+'%</span></p>'+
+							'<p><span>52周低</span><span>'+detailData[49]+'</span></p>'+
+						'</div></div>';
+					}
+				}else{
+					if(type === 'hs'){
+						if(zhishu.length > 0){
+							html = '<p style="font-size: 25px;" class="isDown">'+detailData[3]+'</p>'+
+								'<p class="status isDown"><span>'+detailData[31]+'</span><span>'+detailData[32]+'%</span><span style="color:#bbb">'+formDate(detailData[30])+'</span></p>'+
+								'<div class="info_wrap"><div class="info clearfix">'+
+									'<p><span>今开</span><span class="isDown">'+detailData[5]+'</span></p>'+
+									'<p><span>最高</span><span class="isDown">'+detailData[33]+'</span></p>'+
+									'<p><span>成交额</span><span>'+fixData2(detailData[57])+'</span></p>'+
+									'<p><span>昨收</span><span>'+detailData[4]+'</span></p>'+
+									'<p><span>最低</span><span>'+detailData[34]+'</span></p>'+
+									'<p><span>成交量</span><span>'+fixData(detailData[6])+'手</span></p>'+
+									'<p><span>涨家</span><span>'+zhishu[2]+'</span></p>'+
+									'<p><span>平家</span><span>'+zhishu[3]+'</span></p>'+
+									'<p><span>跌家</span><span>'+zhishu[4]+'</span></p>'+
+									'<p><span>振幅</span><span>'+detailData[43]+'%</span></p>'+
+								'</div></div>';
+								orderHtml = '<div class="list_wrap">'+
+								'<div class="order_item label">'+
+									'<p class="lab">买入</p>'+
+									'<p class="num">金额</p>'+
+									'<p class="price">数量</p>'+
+								'</div>'+
+								'<div class="order_item">'+
+									'<p class="lab">买1</p>'+
+									'<p class="num">'+detailData[9]+'</p>'+
+									'<p class="price">'+detailData[10]+'</p>'+
+								'</div>'+
+								'<div class="order_item">'+
+									'<p class="lab">买2</p>'+
+									'<p class="num">'+detailData[11]+'</p>'+
+									'<p class="price">'+detailData[12]+'</p>'+
+								'</div>'+
+								'<div class="order_item">'+
+									'<p class="lab">买3</p>'+
+									'<p class="num">'+detailData[13]+'</p>'+
+									'<p class="price">'+detailData[14]+'</p>'+
+								'</div>'+
+								'<div class="order_item">'+
+									'<p class="lab">买4</p>'+
+									'<p class="num">'+detailData[15]+'</p>'+
+									'<p class="price">'+detailData[16]+'</p>'+
+								'</div>'+
+								'<div class="order_item">'+
+									'<p class="lab">买5</p>'+
+									'<p class="num">'+detailData[17]+'</p>'+
+									'<p class="price">'+detailData[18]+'</p>'+
+								'</div>'+
+							'</div>'+
+							'<div class="list_wrap">'+
+								'<div class="order_item">'+
+									'<p class="lab">卖出</p>'+
+									'<p class="num">金额</p>'+
+									'<p class="price">数量</p>'+
+								'</div>'+
+								'<div class="order_item">'+
+									'<p class="lab">卖1</p>'+
+									'<p class="num">'+detailData[19]+'</p>'+
+									'<p class="price">'+detailData[20]+'</p>'+
+								'</div>'+
+								'<div class="order_item">'+
+									'<p class="lab">卖2</p>'+
+									'<p class="num">'+detailData[21]+'</p>'+
+									'<p class="price">'+detailData[22]+'</p>'+
+								'</div>'+
+								'<div class="order_item">'+
+									'<p class="lab">卖3</p>'+
+									'<p class="num">'+detailData[23]+'</p>'+
+									'<p class="price">'+detailData[24]+'</p>'+
+								'</div>'+
+								'<div class="order_item">'+
+									'<p class="lab">卖4</p>'+
+									'<p class="num">'+detailData[25]+'</p>'+
+									'<p class="price">'+detailData[26]+'</p>'+
+								'</div>'+
+								'<div class="order_item">'+
+									'<p class="lab">卖5</p>'+
+									'<p class="num">'+detailData[27]+'</p>'+
+									'<p class="price">'+detailData[28]+'</p>'+
+								'</div>'+
+							'</div>';
+						}else{
+							html = '<p style="font-size: 25px;" class="isDown">'+detailData[3]+'</p>'+
+								'<p class="status isDown"><span>'+detailData[31]+'</span><span>'+detailData[32]+'%</span><span style="color:#bbb">'+formDate(detailData[30])+'</span></p>'+
+								'<div class="info_wrap"><div class="info clearfix">'+
+									'<p><span>今开</span><span class="isDown">'+detailData[5]+'</span></p>'+
+									'<p><span>最高</span><span class="isDown">'+detailData[33]+'</span></p>'+
+									'<p><span>成交量</span><span>'+fixData(detailData[6])+'手</span></p>'+
+									'<p><span>昨收</span><span>'+detailData[4]+'</span></p>'+
+									'<p><span>最低</span><span>'+detailData[34]+'</span></p>'+
+									'<p><span>成交额</span><span>'+fixData2(detailData[57])+'</span></p>'+
+									'<p><span>换手率</span><span>'+detailData[38]+'%</span></p>'+
+									'<p><span>市盈ttm</span><span>'+detailData[39]+'</span></p>'+
+									'<p><span>总市值</span><span>'+detailData[45]+'亿</span></p>'+
+									'<p><span>量比</span><span>'+detailData[49]+'</span></p>'+
+									'<p><span>市盈动</span><span>'+detailData[52]+'</span></p>'+
+									'<p><span>流通值</span><span>'+detailData[44]+'</span></p>'+
+									'<p><span>委比</span><span>'+detailData[49]+'</span></p>'+
+									'<p><span>市盈静</span><span>'+detailData[53]+'</span></p>'+
+									'<p><span>市净率</span><span>'+detailData[46]+'</span></p>'+
+									'<p><span>涨停价</span><span>'+detailData[47]+'</span></p>'+
+									'<p><span>均价</span><span>'+detailData[51]+'</span></p>'+
+									'<p><span>内盘</span><span>'+detailData[7]+'</span></p>'+
+									'<p><span>跌停价</span><span>'+detailData[48]+'</span></p>'+
+									'<p><span>振幅</span><span>'+detailData[43]+'%</span></p>'+
+									'<p><span>外盘</span><span>'+detailData[8]+'</span></p>'+
+								'</div></div>';
+							orderHtml = '<div class="list_wrap">'+
+								'<div class="order_item label">'+
+									'<p class="lab">买入</p>'+
+									'<p class="num">金额</p>'+
+									'<p class="price">数量</p>'+
+								'</div>'+
+								'<div class="order_item">'+
+									'<p class="lab">买1</p>'+
+									'<p class="num">'+detailData[9]+'</p>'+
+									'<p class="price">'+detailData[10]+'</p>'+
+								'</div>'+
+								'<div class="order_item">'+
+									'<p class="lab">买2</p>'+
+									'<p class="num">'+detailData[11]+'</p>'+
+									'<p class="price">'+detailData[12]+'</p>'+
+								'</div>'+
+								'<div class="order_item">'+
+									'<p class="lab">买3</p>'+
+									'<p class="num">'+detailData[13]+'</p>'+
+									'<p class="price">'+detailData[14]+'</p>'+
+								'</div>'+
+								'<div class="order_item">'+
+									'<p class="lab">买4</p>'+
+									'<p class="num">'+detailData[15]+'</p>'+
+									'<p class="price">'+detailData[16]+'</p>'+
+								'</div>'+
+								'<div class="order_item">'+
+									'<p class="lab">买5</p>'+
+									'<p class="num">'+detailData[17]+'</p>'+
+									'<p class="price">'+detailData[18]+'</p>'+
+								'</div>'+
+							'</div>'+
+							'<div class="list_wrap">'+
+								'<div class="order_item label">'+
+									'<p class="lab">卖出</p>'+
+									'<p class="num">金额</p>'+
+									'<p class="price">数量</p>'+
+								'</div>'+
+								'<div class="order_item">'+
+									'<p class="lab">卖1</p>'+
+									'<p class="num">'+detailData[19]+'</p>'+
+									'<p class="price">'+detailData[20]+'</p>'+
+								'</div>'+
+								'<div class="order_item">'+
+									'<p class="lab">卖2</p>'+
+									'<p class="num">'+detailData[21]+'</p>'+
+									'<p class="price">'+detailData[22]+'</p>'+
+								'</div>'+
+								'<div class="order_item">'+
+									'<p class="lab">卖3</p>'+
+									'<p class="num">'+detailData[23]+'</p>'+
+									'<p class="price">'+detailData[24]+'</p>'+
+								'</div>'+
+								'<div class="order_item">'+
+									'<p class="lab">卖4</p>'+
+									'<p class="num">'+detailData[25]+'</p>'+
+									'<p class="price">'+detailData[26]+'</p>'+
+								'</div>'+
+								'<div class="order_item">'+
+									'<p class="lab">卖5</p>'+
+									'<p class="num">'+detailData[27]+'</p>'+
+									'<p class="price">'+detailData[28]+'</p>'+
+								'</div>'+
+							'</div>'
+						}
+					}else if(type === 'hk'){
+						if(zhishu.length > 0){
+							html = '<p style="font-size: 25px;" class="isDown">'+detailData[3]+'</p>'+
+								'<p class="status isDown"><span>'+detailData[31]+'</span><span>'+detailData[32]+'%</span><span style="color:#bbb">'+detailData[30]+'</span></p>'+
+								'<div class="info_wrap"><div class="info clearfix">'+
+									'<p><span>今开</span><span class="isDown">'+detailData[5]+'</span></p>'+
+									'<p><span>最高</span><span class="isDown">'+detailData[33]+'</span></p>'+
+									'<p><span>成交额</span><span>'+fixData2(detailData[37])+'</span></p>'+
+									'<p><span>昨收</span><span>'+detailData[4]+'</span></p>'+
+									'<p><span>最低</span><span>'+detailData[34]+'</span></p>'+
+									'<p><span>振幅</span><span>'+detailData[43]+'%</span></p>'+
+									'<p><span>涨家</span><span>'+zhishu[0]+'</span></p>'+
+									'<p><span>平家</span><span>'+zhishu[1]+'</span></p>'+
+									'<p><span>跌家</span><span>'+zhishu[2]+'</span></p>'+
+									'<p><span>52周高</span><span>'+detailData[48]+'</span></p>'+
+									'<p><span>52周低</span><span>'+detailData[49]+'</span></p>'+
+								'</div></div>'
+							}else{
+								html = '<p style="font-size: 25px;" class="isDown">'+detailData[3]+'</p>'+
+									'<p class="status isDown"><span>'+detailData[31]+'</span><span>'+detailData[32]+'%</span><span style="color:#bbb">'+detailData[30]+'</span></p>'+
+									'<div class="info_wrap"><div class="info clearfix">'+
+										'<p><span>今开</span><span class="isDown">'+detailData[5]+'</span></p>'+
+										'<p><span>最高</span><span class="isDown">'+detailData[33]+'</span></p>'+
+										'<p><span>成交量</span><span>'+fixData(detailData[6].split('.')[0])+'股</span></p>'+
+										'<p><span>昨收</span><span>'+detailData[4]+'</span></p>'+
+										'<p><span>最低</span><span>'+detailData[34]+'</span></p>'+
+										'<p><span>成交额</span><span>'+fixData2(detailData[37])+'</span></p>'+
+										'<p><span>换手率</span><span>'+detailData[59]+'%</span></p>'+
+										'<p><span>市盈ttm</span><span>'+detailData[39]+'</span></p>'+
+										'<p><span>总市值</span><span>'+detailData[45]+'亿</span></p>'+
+										'<p><span>量比</span><span>'+detailData[50]+'</span></p>'+
+										'<p><span>市盈静</span><span>'+detailData[57]+'</span></p>'+
+										'<p><span>流通值</span><span>'+detailData[44]+'</span></p>'+
+										'<p><span>市净率</span><span>'+detailData[58]+'</span></p>'+
+										'<p><span>振幅</span><span>'+detailData[43]+'%</span></p>'+
+										'<p><span>周息率</span><span>'+detailData[47]+'%</span></p>'+
+										'<p><span>52周高</span><span>'+detailData[48]+'%</span></p>'+
+										'<p><span>52周低</span><span>'+detailData[49]+'%</span></p>'+
+									'</div></div>'
+							}
+					}else if(type === 'us'){
+						html = '<p style="font-size: 25px;" class="isDown">'+detailData[3]+'</p>'+
+						'<p class="status isDown"><span>'+detailData[31]+'</span><span>'+detailData[32]+'%</span><span style="color:#bbb">'+detailData[30]+' 美东时间</span></p>'+
+						'<div class="info_wrap"><div class="info clearfix">'+
+							'<p><span>今开</span><span class="isDown">'+detailData[5]+'</span></p>'+
+							'<p><span>最高</span><span class="isDown">'+detailData[33]+'</span></p>'+
+							'<p><span>成交量</span><span>'+fixData(detailData[6])+'股</span></p>'+
+							'<p><span>昨收</span><span>'+detailData[4]+'</span></p>'+
+							'<p><span>最低</span><span>'+detailData[34]+'</span></p>'+
+							'<p><span>总市值</span><span>'+detailData[45]+'亿</span></p>'+
+							'<p><span>市净率</span><span>'+detailData[51]+'亿</span></p>'+
+							'<p><span>市盈ttm</span><span>'+detailData[39]+'</span></p>'+
+							'<p><span>每股收益</span><span>'+detailData[47]+'</span></p>'+
+							'<p><span>52周高</span><span>'+detailData[48]+'</span></p>'+
+							'<p><span>振幅</span><span>'+detailData[43]+'%</span></p>'+
+							'<p><span>周息率</span><span>'+detailData[52]+'%</span></p>'+
+							'<p><span>52周低</span><span>'+detailData[49]+'</span></p>'+
+						'</div></div>'
+					}
+				}
+				$(".detail_wrap").html(html);
+				$(".order_list").html(orderHtml);
+			}
+				
+			function fixData(data){
+				if(data.search(/\./) > -1){
+					data = data * 10000;
+				}
+				var dataLen = data.toString().length;
+				if(dataLen > 8){
+					return (data/100000000).toFixed(2) + '亿';
+				}
+				if(dataLen > 4){
+					return (data/10000).toFixed(2) + '万';
+				}
+				return data;
+			}
+
+			function fixData2(data){
+				if(data.search(/\./) > -1){
+					data = data.split('.')[0];
+				}
+				var dataLen = data.toString().length;
+				if(dataLen > 8){
+					return (data/100000000).toFixed(2) + '亿';
+				}
+				if(dataLen > 4){
+					return (data/10000).toFixed(2) + '万';
+				}
+				return data;
+			}
+
+			var paramsCode,paramsType,showDrawType;
+			function getParam(){
+				var params = window.location.href.split('?')[1].split('&');
+				paramsCode = params[0].split('=')[1] || 'sz000001';
+				paramsType = params[1].split('=')[1] || 'hs';
+				drawMin(paramsCode,paramsType);
+			}
+			
+			getParam();
+
+			function formDate(date){
+				return date.substr(0,4)+'-'+date.substr(4,2)+'-'+date.substr(6,2)+'  '+date.substr(8,2)+':'+date.substr(10,2)+':'+date.substr(12,2)
+			}
+
+			/*-------------------------------日k数据-------------------------------*/
+			function getDayKData(code,type,showtype,callback){
+				$.ajax({
+			    url: getUrl(code,type,showtype),
+			    dataType:"script",
+			    cache:"false",
+			    type:"GET",
+			    success: function () {
+			    	var info = latest_daily_data.split('\n').splice(2);
+
+			     	var arr = info,
+			      _arr = [];
+			      for(var i=0;i<arr.length - 1;i++){ 
+			        var _a = arr[i].split(" ");
+
+			        var tm = _a[3];
+			        _a[3] = _a[4];
+			        _a[4] = tm;
+
+			        _arr.push(_a)
+			      }
+			      callback(_arr);
+			    },
+			    error: function () {
+			      alert("wrong"); 
+			    }
+			  });
+			}
+
+
+			/*-------------------------------周k数据-------------------------------*/
+			function getWeekKData(code,type,showtype,callback){
+			  $.ajax({
+			    url: getUrl(code,type,showtype),
+			    dataType:"script",
+			    cache:"false",
+			    type:"GET",
+			    success: function () {
+			      var info = latest_weekly_data.split('\n').splice(2);
+			      var arr = info,
+			      _arr = [];
+			      for(var i=0;i<arr.length - 1;i++){ 
+			        var _a = arr[i].split(' ');
+
+			        var tm = _a[3];
+			        _a[3] = _a[4];
+			        _a[4] = tm;
+
+			        _arr.push(_a);
+			      }
+			      callback(_arr);
+			    },
+			    error: function () {
+			      alert("wrong"); 
+			    }
+			  });
+			}
+
+
+
+
+			/*-------------------------------月k数据-------------------------------*/
+			function getMonthKData(code,type,showtype,callback){
+			  $.ajax({
+			    url: getUrl(code,type,showtype),
+			    dataType:"script",
+			    cache:"false",
+			    type:"GET",
+			    success: function () {
+			      var info = monthly_data.split('\n').splice(1);
+
+			      var arr = info,
+			      _arr = [];
+			      for(var i=0;i<arr.length - 1;i++){ 
+			        var _a = arr[i].split(" ");
+
+			        var tm = _a[3];
+			        _a[3] = _a[4];
+			        _a[4] = tm;
+			        
+			        _arr.push(_a)
+			      }
+			      callback(_arr);
+			    },
+			    error: function () {
+			      alert("wrong"); 
+			    }
+			  });
+			}
+
+			var detailInfo,isUp = true;
+			var mChart,kChart,kWeekChart,kMonthChart;
+			kChart = echarts.init(document.getElementById('kday')); 
+			kWeekChart = echarts.init(document.getElementById('kweek')); 
+			kMonthChart = echarts.init(document.getElementById('kmonth')); 
+
+			//分时
+			function drawMin(paramsCode,paramsType){
+				mChart = echarts.init(document.getElementById('min'));
+				getmData(paramsCode,paramsType,'min',function(res){
+	        mChart.setOption(initMOption(res,paramsType));
+		    }) 
+			}
+
+
+			// 日k
+			function drawkDay(paramsCode,paramsType){
+				kChart = echarts.init(document.getElementById('kday')); 
+				kChart.showLoading({color: '#fff',textColor: '#fff',maskColor:'rgba(31, 33, 34, 0)'});
+				getDayKData(paramsCode,paramsType,'kday',function(res){
+		      kChart.setOption(initKOption(res));
+		      kChart.hideLoading();
+		    }) 
+			}
+
+
+			// 周k
+			function drawKWeek(paramsCode,paramsType){
+				kWeekChart = echarts.init(document.getElementById('kweek')); 
+				kWeekChart.showLoading({color: '#fff',textColor: '#fff',maskColor:'rgba(31, 33, 34, 0)'});
+				getWeekKData(paramsCode,paramsType,'kweek',function(res){
+					kWeekChart.setOption(initWeekKOption(res)); 
+					kWeekChart.hideLoading();
+				});
+			}
+			
+
+
+			// 月k
+			function drawKMonth(paramsCode,paramsType){
+				kMonthChart = echarts.init(document.getElementById('kmonth')); 
+				kMonthChart.showLoading({color: '#fff',textColor: '#fff',maskColor:'rgba(31, 33, 34, 0)'});
+				getMonthKData(paramsCode,paramsType,'kmonth',function(res){
+					kMonthChart.setOption(initMonthKOption(res)); 
+					kMonthChart.hideLoading();
+				});
+			}
+			
+
+
+			$(".tabs .tab_item").click(function(){
+				var type = $(this).attr("data-type");
+				showDrawType = type;
+				if(!$(this).hasClass("show")){
+					if(type == 'kday'){
+						drawkDay(paramsCode,paramsType);
+					}else if(type == 'kweek'){
+						drawKWeek(paramsCode,paramsType);
+					}else if(type == 'kmonth'){
+						drawKMonth(paramsCode,paramsType);
+					}
+					$(this).addClass("show");
+				}
+				$(this).addClass("active").siblings().removeClass("active");
+				$(".Kline-div #"+ type).addClass('active').siblings().removeClass('active');
+			});
+
+			$("#Kline-div").on("touchend",function(){
+				$(".Kline-div .k-conn").children('div').eq(1).hide();
+				mChart.dispatchAction({
+            type: 'hideTip',
+        });
+        kChart.dispatchAction({
+            type: 'hideTip',
+        });
+        kWeekChart.dispatchAction({
+            type: 'hideTip',
+        });
+        kMonthChart.dispatchAction({
+            type: 'hideTip',
+        });
+			});
+          
+       
+
+      setInterval(function(){
+				drawMin(paramsCode,paramsType);
+				console.log('showDrawType',showDrawType);
+				// if(showDrawType == 'kday'){
+				// 	drawkDay(paramsCode,paramsType);
+				// }else if(showDrawType == 'kweek'){
+				// 	drawKWeek(paramsCode,paramsType);
+				// }else if(showDrawType == 'kmonth'){
+				// 	drawKMonth(paramsCode,paramsType);
+				// }
+      },3000)
+
+      setInterval(function(){
+      	showAgain = true;
+      },60000)
+
+
+			$(".detail_wrap").on("click",function(){
+				if($(".detail_wrap").hasClass("active")){
+					$(".detail_wrap .info_wrap").css("height",$(".detail_wrap .info").height() + "px")
+					$(".detail_wrap").removeClass("active");
+				}else{
+					$(".detail_wrap").addClass("active");
+					$(".detail_wrap .info_wrap").css("height","32px");
+				}
+			});
+		})
+	</script>
+</body>
+</html>
