@@ -234,47 +234,47 @@
 				if(type === 'hs'){
 					switch(showtype){
 						case 'min':
-							return 'http://web.ifzq.gtimg.cn/appstock/app/Minute/query?_var=min_data&code='+code+'&r='+Math.random();
+							return 'https://web.ifzq.gtimg.cn/appstock/app/Minute/query?_var=min_data&code='+code+'&r='+Math.random();
 						case 'fdays':
-							return 'http://web.ifzq.gtimg.cn/appstock/app/day/query?_var=fday_data&code='+code+'&r='+ Math.random();
+							return 'https://web.ifzq.gtimg.cn/appstock/app/day/query?_var=fday_data&code='+code+'&r='+ Math.random();
 						case 'kday':
-							return 'http://data.gtimg.cn/flashdata/hushen/latest/daily/'+code+'.js?maxage=43201&visitDstTime=1';
+							return 'https://data.gtimg.cn/flashdata/hushen/latest/daily/'+code+'.js?maxage=43201&visitDstTime=1';
 						case 'kweek':
-							return 'http://data.gtimg.cn/flashdata/hushen/latest/weekly/'+code+'.js?maxage=43201&visitDstTime=1';
+							return 'https://data.gtimg.cn/flashdata/hushen/latest/weekly/'+code+'.js?maxage=43201&visitDstTime=1';
 						case 'kmonth':
-							return 'http://data.gtimg.cn/flashdata/hushen/monthly/'+code+'.js?maxage=43201';
+							return 'https://data.gtimg.cn/flashdata/hushen/monthly/'+code+'.js?maxage=43201';
 						default:
-						 return 'http://data.gtimg.cn/flashdata/hushen/latest/daily/sz000002.js?maxage=43201&visitDstTime=1'
+						 return 'https://data.gtimg.cn/flashdata/hushen/latest/daily/sz000002.js?maxage=43201&visitDstTime=1'
 					}
 				}else if(type === 'hk'){
 					switch(showtype){
 						case 'min':
-							return 'http://web.ifzq.gtimg.cn/appstock/app/hkMinute/query?_var=min_data&code=hk'+code+'&r='+Math.random();
+							return 'https://web.ifzq.gtimg.cn/appstock/app/hkMinute/query?_var=min_data&code=hk'+code+'&r='+Math.random();
 						case 'fdays':
-							return 'http://web.ifzq.gtimg.cn/appstock/app/day/query?_var=fday_data&code=hk'+code+'&r='+Math.random();
+							return 'https://web.ifzq.gtimg.cn/appstock/app/day/query?_var=fday_data&code=hk'+code+'&r='+Math.random();
 						case 'kday':
-							return 'http://data.gtimg.cn/flashdata/hk/latest/daily/hk'+code+'.js?maxage=43201&visitDstTime=1';
+							return 'https://data.gtimg.cn/flashdata/hk/latest/daily/hk'+code+'.js?maxage=43201&visitDstTime=1';
 						case 'kweek':
-							return 'http://data.gtimg.cn/flashdata/hk/latest/weekly/hk'+code+'.js?maxage=43201&visitDstTime=1';
+							return 'https://data.gtimg.cn/flashdata/hk/latest/weekly/hk'+code+'.js?maxage=43201&visitDstTime=1';
 						case 'kmonth':
-							return 'http://data.gtimg.cn/flashdata/hk/monthly/hk'+code+'.js?maxage=43201';
+							return 'https://data.gtimg.cn/flashdata/hk/monthly/hk'+code+'.js?maxage=43201';
 						default:
-						 return 'http://data.gtimg.cn/flashdata/hushen/latest/daily/sz000002.js?maxage=43201&visitDstTime=1'
+						 return 'https://data.gtimg.cn/flashdata/hushen/latest/daily/sz000002.js?maxage=43201&visitDstTime=1'
 					}
 				}else if(type === 'us'){
 					switch(showtype){
 						case 'min':
-							return 'http://web.ifzq.gtimg.cn/appstock/app/UsMinute/query?_var=min_data&code=us'+code+'&r='+Math.random();
+							return 'https://web.ifzq.gtimg.cn/appstock/app/UsMinute/query?_var=min_data&code=us'+code+'&r='+Math.random();
 						case 'fdays':
-							return 'http://web.ifzq.gtimg.cn/appstock/app/dayus/query?_var=fday_data&code=us'+code+'&r='+Math.random();
+							return 'https://web.ifzq.gtimg.cn/appstock/app/dayus/query?_var=fday_data&code=us'+code+'&r='+Math.random();
 						case 'kday':
-							return 'http://data.gtimg.cn/flashdata/us/latest/daily/us'+code+'.js?maxage=43201&visitDstTime=1';
+							return 'https://data.gtimg.cn/flashdata/us/latest/daily/us'+code+'.js?maxage=43201&visitDstTime=1';
 						case 'kweek':
-							return 'http://data.gtimg.cn/flashdata/us/latest/weekly/us'+code+'.js?maxage=43201&visitDstTime=1';
+							return 'https://data.gtimg.cn/flashdata/us/latest/weekly/us'+code+'.js?maxage=43201&visitDstTime=1';
 						case 'kmonth':
-							return 'http://data.gtimg.cn/flashdata/us/monthly/us'+code+'.js?maxage=43201';
+							return 'https://data.gtimg.cn/flashdata/us/monthly/us'+code+'.js?maxage=43201';
 						default:
-						 return 'http://data.gtimg.cn/flashdata/hushen/latest/daily/sz000002.js?maxage=43201&visitDstTime=1'
+						 return 'https://data.gtimg.cn/flashdata/hushen/latest/daily/sz000002.js?maxage=43201&visitDstTime=1'
 					}
 				}
 			}
@@ -337,9 +337,9 @@
 			function getInfo(code,type,callback){ //获取股票信息
 				var infoUrl;
 				if(type === 'hs'){
-					infoUrl = "http://hq.sinajs.cn/list="+code
+					infoUrl = "https://hq.sinajs.cn/list="+code
 				}else{
-					infoUrl = "http://hq.sinajs.cn/list="+type+code
+					infoUrl = "https://hq.sinajs.cn/list="+type+code
 				}
 			  $.ajax({
 			    url: infoUrl,
